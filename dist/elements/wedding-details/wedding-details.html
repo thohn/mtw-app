@@ -1,0 +1,91 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+
+<dom-module id="wedding-details">
+  <template>
+    <style include="shared-styles"></style>
+    <style>
+      :host {
+        display: block;
+        max-width: 960px;
+        margin: 16px auto;
+      }
+      
+      paper-card {
+        border-radius: 2px;
+        padding: 16px 16px 16px 16px;
+        max-width: 960px;
+        margin: 16px auto;
+        background: white;
+        
+        --paper-card-header-image-text: {
+          color: white;
+        }
+      }
+      
+      #ceremony, #reception {
+        max-width: 430px;
+      }
+      
+      a {
+        color: inherit;
+        background-color: inherit;
+      }
+    </style>
+    <section class="horizontal wrap layout start">
+      <paper-card id="ceremony" elevation=1 heading="Ceremony" image="../../images/ceremony.jpg">
+        <div class="card-content">
+          <h1>Devonian Botanical Gardens</h1>
+          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do 
+          eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad 
+          minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip 
+          ex ea commodo consequat. Duis aute irure dolor in reprehenderit in 
+          voluptate velit esse cillum dolore eu fugiat nulla pariatur. 
+          Excepteur sint occaecat cupidatat non proident, sunt in culpa qui 
+          officia deserunt mollit anim id est laborum.</p>
+          <p>
+        </div>
+        <div class="card-actions horizontal center-justified layout">
+          <a href="http://maps.google.com?saddr=Current+Location&daddr=Devonian+Botanic+Garden+(University+of+Alberta),+51227+AB-60,+Parkland+County,+AB+T7Y+1C5">
+            <paper-button>directions</paper-button>
+          </a>
+        </div>
+      </paper-card>
+      <paper-card id="reception" elevation=1 heading="Reception" image="../../images/reception.jpg">
+        <div class="card-content">
+          <h1>Royal Canadian Legion</h1>
+          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do 
+          eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad 
+          minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip 
+          ex ea commodo consequat. Duis aute irure dolor in reprehenderit in 
+          voluptate velit esse cillum dolore eu fugiat nulla pariatur. 
+          Excepteur sint occaecat cupidatat non proident, sunt in culpa qui 
+          officia deserunt mollit anim id est laborum.</p>
+          <p>
+        </div>
+        <div class="card-actions horizontal center-justified layout">
+          <a href="http://maps.google.com?saddr=Current+Location&daddr=Royal+Canadian+Legion+Kingsway,+14339+50th+St+NW,+Edmonton,+AB+T5A+0S9">
+            <paper-button>directions</paper-button>
+          </a>
+        </div>
+    </section>
+      </paper-card>
+  </template>
+
+  <script>
+    (function() {
+      'use strict';
+      
+      new Polymer({
+        is: 'wedding-details',
+
+        properties: {},
+        
+        directions: function(e) {
+          var url = e.target.attributes['data-url'].nodeValue;
+          window.open(url);
+        }
+      });
+    })();
+  </script>
+
+</dom-module>

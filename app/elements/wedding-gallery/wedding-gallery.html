@@ -1,0 +1,49 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+
+<dom-module id="wedding-gallery">
+  <template>
+    <style include="shared-styles"></style>
+    <style>
+      :host {
+        display: block;
+        max-width: 960px;
+        margin: 16px auto;
+      }
+      
+      paper-material {
+        border-radius: 2px;
+        padding: 16px 16px 16px 16px;
+        max-width: 960px;
+        margin: 16px auto;
+        background: white;
+      }
+    </style>
+    <section>
+      <paper-material elevation="1">
+        <h2 class="page-title">
+          Gallery:<span>{{params.name}}</span>
+        </h2>
+        <div>This is <span>{{params.name}}</span>'s gallery</div>
+      </paper-material>
+    </section>
+  </template>
+
+  <script>
+    (function() {
+      'use strict';
+      
+      new Polymer({
+        is: 'wedding-gallery',
+
+        properties: {
+          params: {
+            type: String,
+            value: 'Welcome!',
+            notify: true
+          }
+        }
+      });
+    })();
+  </script>
+
+</dom-module>

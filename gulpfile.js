@@ -12,16 +12,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 // Include Gulp & tools we'll use
 var gulp = require('gulp');
 var shell = require('gulp-shell');
+var nodemon = require('gulp-nodemon');
 var $ = require('gulp-load-plugins')();
 var del = require('del');
 var runSequence = require('run-sequence');
-var browserSync = require('browser-sync');
-var reload = browserSync.reload;
 var merge = require('merge-stream');
 var path = require('path');
 var fs = require('fs');
 var glob = require('glob');
-var historyApiFallback = require('connect-history-api-fallback');
 var packageJson = require('./package.json');
 var crypto = require('crypto');
 var polybuild = require('polybuild');
@@ -54,8 +52,7 @@ var jshintTask = function (src) {
   return gulp.src(src)
     .pipe($.jshint.extract()) // Extract JS from .html files
     .pipe($.jshint())
-    .pipe($.jshint.reporter('jshint-stylish'))
-    .pipe($.if(!browserSync.active, $.jshint.reporter('fail')));
+    .pipe($.jshint.reporter('jshint-stylish'));
 };
 
 var imageOptimizeTask = function (src, dest) {
@@ -111,8 +108,7 @@ gulp.task('jshint', function () {
     ])
     .pipe($.jshint.extract()) // Extract JS from .html files
     .pipe($.jshint())
-    .pipe($.jshint.reporter('jshint-stylish'))
-    .pipe($.if(!browserSync.active, $.jshint.reporter('fail')));
+    .pipe($.jshint.reporter('jshint-stylish'));
 });
 
 // Optimize images
@@ -226,68 +222,34 @@ gulp.task('clean', function (cb) {
   del(['.tmp', 'dist'], cb);
 });
 
-// Watch files for changes & reload
 gulp.task('serve', ['styles', 'elements', 'images'], function () {
-  browserSync({
-    port: 5000,
-    notify: false,
-    ghostMode: false,
-    logPrefix: 'TMW',
-    snippetOptions: {
-      rule: {
-        match: '<span id="browser-sync-binding"></span>',
-        fn: function (snippet) {
-          return snippet;
-        }
-      }
-    },
-    // Run as an https by uncommenting 'https: true'
-    // Note: this uses an unsigned certificate which on first access
-    //       will present a certificate warning in the browser.
-    // https: true,
-    server: {
-      baseDir: ['.tmp', 'app'],
-      middleware: [ historyApiFallback() ],
-      routes: {
-        '/bower_components': 'bower_components'
-      }
-    }
-  });
-
-  gulp.watch(['app/**/*.html'], reload);
-  gulp.watch(['app/styles/**/*.css'], ['styles', reload]);
-  gulp.watch(['app/elements/**/*.css'], ['elements', reload]);
-  gulp.watch(['app/{scripts,elements}/**/{*.js,*.html}'], ['jshint']);
-  gulp.watch(['app/images/**/*'], reload);
+  nodemon({
+    script: 'server.js', 
+    ext: 'js html css', 
+    env: { 'NODE_ENV': 'development' ,
+            'PORT': 5000 },
+    cwd: __dirname + '/app'
+  })
 });
 
-// Build and serve the output from the dist build
 gulp.task('serve:dist', ['default'], function () {
-  browserSync({
-    port: 5001,
-    notify: false,
-    ghostMode: false,
-    logPrefix: 'TMW',
-    snippetOptions: {
-      rule: {
-        match: '<span id="browser-sync-binding"></span>',
-        fn: function (snippet) {
-          return snippet;
-        }
-      }
-    },
-    // Run as an https by uncommenting 'https: true'
-    // Note: this uses an unsigned certificate which on first access
-    //       will present a certificate warning in the browser.
-    // https: true,
-    server: 'dist',
-    middleware: [ historyApiFallback() ]
-  });
+  nodemon({
+    script: 'server.js', 
+    ext: 'js html css', 
+    env: {  'NODE_ENV': 'production',
+            'PORT': 3000 },
+    cwd: __dirname + '/dist'
+  })
 });
 
-gulp.task('python-http-server', shell.task([
-  'cd dist; python -m SimpleHTTPServer 5001'
-]));
+gulp.task('serve:production', ['default'], function () {
+  nodemon({
+    script: 'server.js', 
+    ext: 'js html css', 
+    env: {  'NODE_ENV': 'production' },
+    cwd: __dirname + '/dist'
+  })
+});
 
 // Build production files, the default task
 gulp.task('default', ['clean'], function (cb) {
@@ -297,13 +259,8 @@ gulp.task('default', ['clean'], function (cb) {
     'elements',
     ['jshint', 'images', 'fonts', 'html'],
     'vulcanize','rename-index', 'cache-config', 'remove-old-build-index',
-    'python-http-server',
     cb);
 });
-
-// Load tasks for web-component-tester
-// Adds tasks for `gulp test:local` and `gulp test:remote`
-require('web-component-tester').gulp.init(gulp);
 
 // Load custom tasks from the `tasks` directory
 try { require('require-dir')('tasks'); } catch (err) {}

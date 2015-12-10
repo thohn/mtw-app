@@ -42,6 +42,20 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     --paper-menu-focused-item: {
       color: var(--primary-text-color);
     };
+    --paper-menu-focused-item-after: {
+    	background: var(--dark-primary-color);
+    	opacity: 0;
+    }
+    --paper-header-panel-body: {
+    	-o-background-image: url('images/background.jpg');
+    	-moz-background-image: url('images/background.jpg');
+    	-webkit-background-image: url('images/background.jpg');
+    	background-image: url('images/background.jpg');
+    	-o-background-size: cover;
+			-moz-background-size: cover;
+			-webkit-background-size: cover;
+			background-size: cover;
+    }
   }
 
   /* General styles */
@@ -86,12 +100,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   }
 
   /* Small */
-  @media only screen and (max-width: 670px) {
+  @media only screen and (max-width: 810px) {
     paper-menu.list {
       padding: 0px;
     }
     paper-button {
-      min-width: 3.73em;
+      min-width: 3.2em;
     }
     paper-button span {
       display:none;

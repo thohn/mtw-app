@@ -73,6 +73,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 <span>Details of the Day</span>
               </paper-button>
 
+              <paper-button data-route="gallery" on-click="onDataRouteClick">
+                <iron-icon icon="perm-media"></iron-icon>
+                <span>Gallery</span>
+              </paper-button>
+
               <paper-button data-route="rsvp" on-click="onDataRouteClick">
                 <iron-icon icon="event"></iron-icon>
                 <span>RSVP</span>
@@ -107,27 +112,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       </paper-header-panel>
 <!--       <div id="footer"><paper-item class="horizontal around-justified layout"><span>Designed by Mel, Glued Together by Timo</span></paper-item></div> -->
-
-
-    <paper-toast id="caching-complete"
-      duration="6000"
-      text="Caching complete! You can view these pages when offline.">
-    </paper-toast>
-
-    <paper-toast id="caching-error"
-      duration="6000"
-      text="Caching Error! You won't be able to view these pages if the server is offline. :/">
-    </paper-toast>
-
-    <platinum-sw-register auto-register
-      clients-claim
-      skip-waiting
-      on-service-worker-error="displayInstalledToastError"
-      on-service-worker-installed="displayInstalledToast">
-      <platinum-sw-cache default-cache-strategy="fastest"
-        cache-config-file="cache-config.json">
-      </platinum-sw-cache>
-    </platinum-sw-register>
 
   </template>
 

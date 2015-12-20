@@ -15,6 +15,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   // Learn more about auto-binding templates at http://goo.gl/Dx1u2g
   var app = document.querySelector('#app');
 
+  // Sets app default base URL
+  app.baseUrl = '/';
+  if (window.location.port === '') {  // if production
+    // Uncomment app.baseURL below and
+    // set app.baseURL to '/your-pathname/' if running from folder in production
+    // app.baseUrl = '/polymer-starter-kit/';
+  }
+  
   // Listen for template bound event to know when bindings
   // have resolved and content has been stamped to the page
   app.addEventListener('dom-change', function() {});
@@ -23,19 +31,24 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   window.addEventListener('WebComponentsReady', function() {
     // imports are loaded and elements have been registered
   });
-
-  // Close drawer after menu item is selected if drawerPanel is narrow
+  
   app.onDataRouteClick = function(e) {
-    var route = e.target.attributes['data-route'].nodeValue;
-    if(route == 'our-story') {
-      page.redirect('/');
-    }
-    else {
-      page.redirect('/' + route);
-    }
+  	var attributeRoute = typeof e.target.attributes['data-route'] === "undefined" ? "":e.target.attributes['data-route'].nodeValue;
+  	var dataRoute = e.target.dataRoute;
+  	var route = (typeof attributeRoute === "undefined" ? "" : attributeRoute) || (typeof dataRoute === "undefined" ? "" : dataRoute);
+  	page.show("/" + route);
   };
-
-
+  
+  app.loadAlbum = function(data, album) {
+  	var gallery = document.querySelector('wedding-gallery');
+  	return gallery.loadAlbum(album);
+  };
+  
+  app.loadPhoto = function(data, album, photo) {
+  	var gallery = document.querySelector('wedding-gallery');
+  	return gallery.loadPhoto(album, photo);
+  };
+  
   // Scroll page to top and expand header
   app.scrollPageToTop = function() {
     document.getElementById('mainContainer').scroller.scrollTop = 0;

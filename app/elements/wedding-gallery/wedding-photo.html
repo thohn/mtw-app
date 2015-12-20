@@ -1,0 +1,77 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+
+<dom-module id="wedding-photo">
+  <template>
+    <style include="shared-styles"></style>
+    <style>
+      :host {
+        display: block;
+        max-width: 100%;
+        margin: 16px auto;
+      }
+      
+      paper-button {
+      	background-color: grey;
+      	position: absolute;
+      	width:30%;
+      	height:1080px;
+      	flex: stretch;
+      	opacity: 0;
+      }
+      
+      paper-button:hover {
+      	opacity: 0.3;
+      }
+      
+      img {
+      	width:100%;
+      }
+      
+      .prev {
+      	left: 0px;
+      	top:0px;
+      }
+      
+      .next {
+      	right: 0px;
+      	top:0px;
+      }
+    </style>
+    <section class="photo">     
+			  <paper-button elevation="1" data-route="{{parsePath(data.prev)}}" on-click="onDataRouteClick" class="prev">
+			  	<iron-icon icon="arrow-back"></iron-icon>
+			  </paper-button> 
+			  <img src="{{parsePath(data.path)}}" data-route="{{parsePath(data.album)}}" on-click="onDataRouteClick"></img>
+			  <paper-button elevation="1" data-route="{{parsePath(data.next)}}" on-click="onDataRouteClick" class="next">
+			  	<iron-icon icon="arrow-forward"></iron-icon>
+			  </paper-button>
+    </section>
+  </template>
+
+  <script>
+    (function() {
+      'use strict';
+      
+      new Polymer({
+        is: 'wedding-photo',
+
+        properties: {
+        	photo: {
+        		type: Object,
+        		value: {},
+        		notify: true
+        	}
+        },
+        
+        parsePath: function(path) {
+        	return typeof path==="undefined" ? "" : path.replace(/^.*(?=gallery)/, "");
+        },
+        
+        onDataRouteClick: function(e) {
+      		app.onDataRouteClick(e);
+        }
+      });
+    })();
+  </script>
+
+</dom-module>

@@ -27,7 +27,7 @@ app.use(express.static(__dirname + '/'));
 app.use('/bower_components', express.static(__dirname + '/../bower_components'));
 
 app.get('/list-galleries', function(req, res) {
-  res.json(dirTree(__dirname + '/images/gallery'));
+  res.json(dirTree(__dirname + '/gallery'));
 });
 
 app.listen(process.env.PORT || 80);

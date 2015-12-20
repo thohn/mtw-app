@@ -11,11 +11,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <script src="../bower_components/page/page.js"></script>
 <script>
   window.addEventListener('WebComponentsReady', function() {
-
     // We use Page.js for routing. This is a Micro
     // client-side router inspired by the Express router
     // More info: https://visionmedia.github.io/page.js/
 
+    // Removes end / from app.baseUrl which page.base requires for production
+    if (window.location.port === '') {  // if production
+      page.base(app.baseUrl.replace(/\/$/, ''));
+    }
+    
     // Middleware
     function scrollToTop(ctx, next) {
       app.scrollPageToTop();
@@ -23,30 +27,61 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     }
 
     // Routes
-    page('/', scrollToTop, function() {
+    page('*', scrollToTop, function(ctx, next) {
+      next();
+    });
+    
+    page('/', function() {
+      app.route = 'our-story';
+    });
+    
+    page('/our-story', function() {
+      page.redirect(app.baseUrl);
+    });
+
+    page(app.baseUrl, function() {
       app.route = 'our-story';
     });
 
-    page('/details', scrollToTop, function() {
+    page('/details', function() {
       app.route = 'details';
-    });
-
-    //page('/details/:name', scrollToTop, function(data) {
-    //  app.route = 'gallery';
-    //  var gallery = document.querySelector('wedding-gallery');
-    //  gallery.params = data.params;
-    //});
+    });   
     
-    page('/gallery', scrollToTop, function() {
+    page('/gallery/:album', function(data) {
+    	app.route = 'album';
+    	var gallery = document.querySelector('wedding-gallery');
+    	var album = document.querySelector('wedding-album');
+    	//album.data = gallery.loadAlbum(data.params.album);
+    	app.album = data.params.album;
+    });
+    
+    page('/gallery/:album/:photo', function(data) {
+    	app.route = 'photo';
+    	var gallery = document.querySelector('wedding-gallery');
+    	var photo = document.querySelector('wedding-photo');
+    	//photo.data = gallery.loadPhoto(data.params.album, data.params.photo);
+    	app.album = data.params.album;
+    	app.photo = data.params.photo;
+    });
+    
+    page('/gallery', function() {
     	app.route = 'gallery';
     });
 
-    page('/rsvp', scrollToTop, function() {
+    page('/rsvp', function() {
       app.route = 'rsvp';
     });
 
-    page('/registry', scrollToTop, function() {
+    page('/registry', function() {
       app.route = 'registry';
+    });
+    
+
+    // 404
+    page('*', function() {
+      app.$.toast.text = 'Can\'t find: ' + window.location.href  + '. Redirected you to Home Page';
+      app.$.toast.show();
+      page.show(app.baseUrl);
     });
 
     // add #! before urls

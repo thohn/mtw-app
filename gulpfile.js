@@ -14,6 +14,9 @@ var gulp = require('gulp');
 var shell = require('gulp-shell');
 var nodemon = require('gulp-nodemon');
 var $ = require('gulp-load-plugins')();
+var imageresize = require('gulp-image-resize');
+var imagemin = require('gulp-imagemin');
+var pngquant = require('imagemin-pngquant');
 var del = require('del');
 var runSequence = require('run-sequence');
 var merge = require('merge-stream');
@@ -34,6 +37,18 @@ var AUTOPREFIXER_BROWSERS = [
   'ios >= 7',
   'android >= 4.4',
   'bb >= 10'
+];
+
+// create an array of image groups (see comments above)
+// specifying the folder name, the ouput dimensions and
+// whether or not to crop the images
+var images = [
+    { folder: 'bg', width: 1200, crop: false, src: "app/images/bg/**/*", dest: "dist/images/bg" },
+    { folder: 'card', width: 960, crop: false, src: "app/images/card/**/*", dest: "dist/images/card" },
+    { folder: 'gallery', width: 960, crop: false, src: "app/gallery/**/*", dest: "dist/gallery" }
+];
+var rawImages = [
+    { folder: 'gallery', width: 960, crop: false, src: "app/gallery/**/*", dest: "app/gallery" }
 ];
 
 var styleTask = function (stylesPath, srcs) {
@@ -63,6 +78,43 @@ var imageOptimizeTask = function (src, dest) {
     })))
     .pipe(gulp.dest(dest))
     .pipe($.size({title: 'images'}));
+};
+
+var imageResizeAndOptimizeTask = function (paths) {
+	paths.forEach(function(group) {
+		// build the resize object
+		var resize_settings = {
+		    width: group.width,
+		    crop: group.crop,
+		    // never increase image dimensions
+		    upscale : false
+		}
+		// only specify the height if it exists
+		if (group.hasOwnProperty("height")) {
+		    resize_settings.height = group.height
+		}
+
+		gulp
+		
+		// grab all images from the folder
+		.src(group.src)
+
+		// resize them according to the width/height settings
+		.pipe(imageresize(resize_settings))
+		
+		// optimize the images
+		.pipe(imagemin({
+		    progressive: true,
+		    // set this if you are using svg images
+		    svgoPlugins: [{removeViewBox: false}],
+		    use: [pngquant()]
+		}))
+		
+		// output each image to the dest path
+		// maintaining the folder structure
+		.pipe(gulp.dest(group.dest));
+  });
+  return true;
 };
 
 var optimizeHtmlTask = function (src, dest) {
@@ -113,13 +165,22 @@ gulp.task('jshint', function () {
 
 // Optimize images
 gulp.task('images', function () {
-  return imageOptimizeTask('app/images/**/*', 'dist/images');
+  //return imageOptimizeTask('app/images/**/*', 'dist/images');
+  return imageResizeAndOptimizeTask(images);
+});
+
+gulp.task('min-img', function () {
+	//return imageOptimizeTask('app/gallery/**/*', 'app/gallery');
+  return imageResizeAndOptimizeTask(rawImages);
 });
 
 // Copy all files at the root level (app)
 gulp.task('copy', function () {
   var app = gulp.src([
     'app/*',
+    '!app/elements',
+    '!app/scripts',
+    '!app/styles',
     '!app/test',
     '!app/cache-config.json'
   ], {

@@ -15,7 +15,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <meta charset="utf-8">
   <meta name="description" content="">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="generator" content="Melanie and Timo Wedding" />
+  <meta name="generator" content="Timo and Mel Wedding" />
   <title>Timo and Mel Wedding</title>
   <!-- Place favicon.ico in the `app/` directory -->
 
@@ -35,7 +35,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <!-- Add to homescreen for Safari on iOS -->
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
-  <meta name="apple-mobile-web-app-title" content="Polymer Starter Kit">
+  <meta name="apple-mobile-web-app-title" content="Timo and Mel Wedding">
 
   <!-- build:css styles/main.css -->
   <link rel="stylesheet" href="styles/main.css">
@@ -65,27 +65,27 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
               <paper-button data-route="our-story" on-click="onDataRouteClick">
                 <iron-icon icon="supervisor-account"></iron-icon>
-                <span>Our Story</span>
+                	<span>Our Story</span>
               </paper-button>
 
               <paper-button data-route="details" on-click="onDataRouteClick">
                 <iron-icon icon="book"></iron-icon>
-                <span>Details of the Day</span>
+                	<span>Details of the Day</span>
               </paper-button>
 
               <paper-button data-route="gallery" on-click="onDataRouteClick">
                 <iron-icon icon="perm-media"></iron-icon>
-                <span>Gallery</span>
+                	<span>Gallery</span>
               </paper-button>
 
               <paper-button data-route="rsvp" on-click="onDataRouteClick">
                 <iron-icon icon="event"></iron-icon>
-                <span>RSVP</span>
+                	<span>RSVP</span>
               </paper-button>
 
               <paper-button data-route="registry" on-click="onDataRouteClick">
                 <iron-icon icon="card-giftcard"></iron-icon>
-                <span>Registry</span>
+                	<span>Registry</span>
               </paper-button>
             </paper-menu>
         </paper-toolbar>
@@ -101,7 +101,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
             <wedding-details data-route="details"></wedding-details>
 
-            <wedding-gallery data-route="gallery"></wedding-gallery>
+            <wedding-gallery data-route="gallery" albums="{{data.children}}"></wedding-gallery>
+
+            <wedding-album data-route="album" data="{{loadAlbum(data, album)}}"></wedding-album>
+            
+            <wedding-photo data-route="photo" data="{{loadPhoto(data, album, photo)}}"></wedding-photo>
 
             <wedding-rsvp data-route="rsvp"></wedding-rsvp>
 
@@ -111,6 +115,19 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         </div>
 
       </paper-header-panel>
+      
+
+    <paper-toast id="toast">
+      <span class="toast-hide-button" role="button" tabindex="0" onclick="app.$.toast.hide()"></span>
+    </paper-toast>
+      
+		  <iron-ajax
+		  auto
+		  url="list-galleries"
+		  params='{}'
+		  handle-as="json"
+		  last-response="{{data}}"
+		  debounce-duration="300"></iron-ajax>
 <!--       <div id="footer"><paper-item class="horizontal around-justified layout"><span>Designed by Mel, Glued Together by Timo</span></paper-item></div> -->
 
   </template>

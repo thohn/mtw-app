@@ -10,21 +10,29 @@
         margin: 16px auto;
       }
       
-      paper-material {
+      paper-card {
         border-radius: 2px;
         padding: 16px 16px 16px 16px;
         max-width: 960px;
-        margin: 16px auto;
+        min-width: 320px;
+        margin: 16px;
         background: white;
+        
+        --paper-card-header-image-text: {
+          color: white;
+        }
       }
     </style>
-    <section>
-      <paper-material elevation="1">
-        <h2 class="page-title">
-          Gallery:<span>{{params.name}}</span>
-        </h2>
-        <div>This is <span>{{params.name}}</span>'s gallery</div>
-      </paper-material>
+    <section class="horizontal start center-justified wrap layout">
+        <template is="dom-repeat" items="{{albums}}">
+		      <paper-card elevation=1 heading="{{item.name}}" image="{{parseThumbnail(item)}}">
+				    <div class="card-content">
+				    </div>
+				    <div class="card-actions horizontal center-justified layout">
+				        <paper-button data-route="{{getAlbumRoute(item)}}" on-click="onDataRouteClick">view</paper-button>
+				    </div>
+				  </paper-card>
+        </template>
     </section>
   </template>
 
@@ -36,11 +44,62 @@
         is: 'wedding-gallery',
 
         properties: {
-          params: {
-            type: String,
-            value: 'Welcome!',
+          albums: {
+            type: Array,
+            value: [],
             notify: true
           }
+        },
+        
+        parseThumbnail: function(album) {
+        	var photos = album.children;
+        	var path = photos[0].path;
+        	return this.parsePath(path);
+        },
+        
+        getAlbumRoute: function(album) {
+        	return this.parsePath(album.path);
+        },
+        
+        parsePath: function(path) {
+        	return path.replace(/^.*(?=gallery)/, "");
+        },
+        
+        loadAlbum: function(albumName) {
+        	for(var i=0; i < this.albums.length; i+=1) {
+        		var album = this.albums[i];
+        		var name = album.name;
+        		if(name === albumName) {
+        			return this.albums[i];
+        		}
+        	}
+        },
+        
+        loadPhoto: function(albumName, photoName) {
+        	var album = this.loadAlbum(albumName);
+        	var photos = album.children;
+        	for(var i=0; i < photos.length; i+=1) {
+        		var photo = photos[i];
+        		var currentPhotoName = photo.name;
+        		if(currentPhotoName === photoName) {
+        			if( (i-1) < 0 ) {
+        				photo.prev = photos[photos.length - 1].path;
+        			} else {
+        				photo.prev = photos[i-1].path;
+        			}
+        			if( (i+1) >= photos.length ) {
+        				photo.next = photos[0].path;
+        			} else {
+        				photo.next = photos[i+1].path;
+        			}
+        			photo.album = album.path;
+        			return photo;
+        		}
+        	}
+        },
+        
+        onDataRouteClick: function(e) {
+      		app.onDataRouteClick(e);
         }
       });
     })();

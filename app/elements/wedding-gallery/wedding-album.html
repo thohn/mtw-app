@@ -1,0 +1,74 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+
+<dom-module id="wedding-album">
+  <template>
+    <style include="shared-styles"></style>
+    <style>
+      :host {
+        display: block;
+        max-width: 960px;
+        margin: 16px auto;
+      }
+      
+      .album {
+				 display: -webkit-flex;
+				 display: flex;
+				 -webkit-align-items: center;
+				 align-items: center;
+				 -webkit-justify-content: center;
+				 justify-content: center;
+				 -webkit-flex-flow: row wrap;
+				 flex-flow: row wrap;
+				 -webkit-align-content: center;
+				 align-content: center;
+      }
+      
+      paper-material {
+        border-radius: 2px;
+        max-width: 250px;
+        padding: 16px 16px 16px 16px;
+        margin: 16px;
+        background: white;
+      }
+      
+      img {
+      	width: 100%;
+      }
+    </style>
+    <section class="horizontal center center-justified wrap layout">      
+      <template is="dom-repeat" items="[[data.children]]">
+			  <paper-material elevation="1">
+			  	<!--iron-image src="{{parsePath(item.path)}}" style="width:270px; height:270px" sizing="contain"></iron-image-->
+			  	<img src="{{parsePath(item.path)}}" data-route="{{parsePath(item.path) || gallery}}" on-click="onDataRouteClick"></img>
+			  </paper-material>
+      </template>
+    </section>
+  </template>
+
+  <script>
+    (function() {
+      'use strict';
+      
+      new Polymer({
+        is: 'wedding-album',
+
+        properties: {
+        	data: {
+        		type: Object,
+        		value: {},
+        		notify: true
+        	}
+        },
+        
+        parsePath: function(path) {
+        	return typeof path==="undefined" ? "" : path.replace(/^.*(?=gallery)/, "");
+        },
+        
+        onDataRouteClick: function(e) {
+      		app.onDataRouteClick(e);
+        }
+      });
+    })();
+  </script>
+
+</dom-module>

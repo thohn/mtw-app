@@ -83,6 +83,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 	<span>RSVP</span>
               </paper-button>
 
+              <paper-button data-route="suggestion" on-click="onDataRouteClick">
+                <iron-icon icon="help"></iron-icon>
+                	<span>Suggestions</span>
+              </paper-button>
+
               <paper-button data-route="registry" on-click="onDataRouteClick">
                 <iron-icon icon="card-giftcard"></iron-icon>
                 	<span>Registry</span>
@@ -108,6 +113,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             <wedding-photo data-route="photo" data="{{loadPhoto(data, album, photo)}}"></wedding-photo>
 
             <wedding-rsvp data-route="rsvp"></wedding-rsvp>
+
+            <wedding-suggestion data-route="suggestion"></wedding-suggestion>
 
             <wedding-registry data-route="registry"></wedding-registry>
 

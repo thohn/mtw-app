@@ -17,7 +17,20 @@
         margin: 16px auto;
         background: white;
       }
-    </style>
+    </style><div id="fb-root"></div>
+    <div id="fb-root"></div>
+    <script>(function(d, s, id) {
+      var js, fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) return;
+      js = d.createElement(s); js.id = id;
+      js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.6&appId=1376192059076293";
+      fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));</script>
+    <section>
+      <paper-material elevation="1">
+        <div class="fb-comments" data-href="http://timoandmel.ca/#!/suggestion" data-width="100%" data-numposts="10"></div>
+      </paper-material>
+    </section>
     <section>
       <paper-material elevation="1">
         <p style="text-align:center"><iframe src="https://docs.google.com/forms/d/12YZrh2_QjJn6Vov-pEYSPtlYFZpiTem0G0U6SOwT3E0/viewform?embedded=true" width="760" height="1000" frameborder="0" marginheight="0" marginwidth="0">Loading...</iframe></p>
@@ -35,6 +48,24 @@
         properties: {}
       });
     })();
+  </script>
+
+  <script>
+    window.fbAsyncInit = function() {
+      FB.init({
+        appId      : '1376192059076293',
+        xfbml      : true,
+        version    : 'v2.6'
+      });
+    };
+
+    (function(d, s, id){
+       var js, fjs = d.getElementsByTagName(s)[0];
+       if (d.getElementById(id)) {return;}
+       js = d.createElement(s); js.id = id;
+       js.src = "//connect.facebook.net/en_US/sdk.js";
+       fjs.parentNode.insertBefore(js, fjs);
+     }(document, 'script', 'facebook-jssdk'));
   </script>
 
 </dom-module>
